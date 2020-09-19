@@ -129,7 +129,7 @@ def main(start_page: int=1, end_page: int=None) -> None:
                 try:
                     list_to_dataframe.append(parse_apartment(url_apartment))
                 except Exception as E:
-                    with open(Path(__file__).parent.joinpath('logs').joinpath('bad_links.txt'), 'a') as f:
+                    with open(Path(__file__).parent.parent.joinpath('logs').joinpath('bad_links.txt'), 'a') as f:
                         f.write(f'{url_apartment} -- {E}\n')
                         logging.exception(E)
                 finally:
