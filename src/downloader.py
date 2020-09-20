@@ -10,7 +10,8 @@ import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from src.sql_connector import get_sqlalchemy_engine, get_distinct_urls_from_database
+from sql_connector import get_sqlalchemy_engine, get_distinct_urls_from_database
+
 
 session = requests.Session()
 
@@ -20,7 +21,6 @@ engine = get_sqlalchemy_engine()
 def get_soup_by_url(url: str) -> BeautifulSoup:
     html = session.get(url).text
     soup = BeautifulSoup(html, 'lxml')
-
     return soup
 
 
@@ -30,7 +30,6 @@ def get_number_last_page() -> int:
         'realty?type=1&otype=1&district[1]=on&district[2]=on&district[3]'
         '=on&district[4]=on&perpage=50&page=1')
     number_last_page = int(soup.find('td', {'class': 'pager_pages'}).find_all('a')[4].text)
-
     return number_last_page
 
 
@@ -61,7 +60,6 @@ def parse_apartment(url: str) -> dict:
     items['дата добавления'] = soup.find(class_='realty_detail_date nobr').get('title')
     items['дата истечения'] = soup.find_all(class_='realty_detail_date')[4].get('title')
     items['ссылка'] = url
-
     return items
 
 
@@ -72,7 +70,6 @@ def get_urls_pages(start_page: int = 1, end_page: int = None) -> List[str]:
     end_page = end_page or get_number_last_page()
     pages_to_parse = range(start_page, end_page + 1)
     urls_pages = [url_base + str(i) for i in pages_to_parse]
-
     return urls_pages
 
 
@@ -83,7 +80,6 @@ def get_urls_apartments_by_page(url_page: str) -> Set[str]:
     soup = soup.find_all('a', {'class': 'visited_ads'})
 
     urls_apartments = {url_base + i.get('href') for i in soup}
-
     return urls_apartments
 
 
@@ -158,6 +154,6 @@ if __name__ == '__main__':
 
     logging.info("Download start")
     try:
-        main(1, 2)
-    except Exception as e:
-        logging.error(e)
+        main()
+    except Exception as E:
+        logging.exception(E)
