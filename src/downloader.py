@@ -140,8 +140,8 @@ def main(start_page: int=1, end_page: int=None) -> None:
         df.to_sql(name='Apartments', con=engine, schema='dbo', if_exists='append', index=False)
 
     new_apartments = len(df.index)
-    print(f'New Apartments:{new_apartments}')
-    logging.info(f'New Apartments:{new_apartments}')
+    print(f'New Apartments: {new_apartments}')
+    logging.info(f'New Apartments: {new_apartments}')
 
 
 if __name__ == '__main__':
