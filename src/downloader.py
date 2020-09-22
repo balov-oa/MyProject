@@ -12,14 +12,13 @@ from tqdm import tqdm
 
 from sql_connector import get_sqlalchemy_engine, get_distinct_urls_from_database
 
+SESSION = requests.Session()
 
-session = requests.Session()
-
-engine = get_sqlalchemy_engine()
+ENGINE = get_sqlalchemy_engine()
 
 
 def get_soup_by_url(url: str) -> BeautifulSoup:
-    html = session.get(url).text
+    html = SESSION.get(url).text
     soup = BeautifulSoup(html, 'lxml')
     return soup
 
@@ -83,7 +82,7 @@ def get_urls_apartments_by_page(url_page: str) -> Set[str]:
     return urls_apartments
 
 
-def main(start_page: int=1, end_page: int=None) -> None:
+def main(start_page: int = 1, end_page: int = None) -> None:
     rename_map = {'район': 'District',
                   'адрес': 'Address',
                   'вид': 'Sales_Type',
@@ -124,10 +123,10 @@ def main(start_page: int=1, end_page: int=None) -> None:
             for url_apartment in tqdm(urls_apartments_to_parse, desc='Apartments', leave=False, ascii=True):
                 try:
                     list_to_dataframe.append(parse_apartment(url_apartment))
-                except Exception as E:
+                except Exception as e:
                     with open(Path(__file__).parent.parent.joinpath('logs').joinpath('bad_links.txt'), 'a') as f:
-                        f.write(f'{url_apartment} -- {E}\n')
-                        logging.exception(E)
+                        f.write(f'{url_apartment} -- {e}\n')
+                        logging.exception(e)
                 finally:
                     time.sleep(randint(0, 4))
             df = df.append(list_to_dataframe, ignore_index=True)
@@ -137,7 +136,7 @@ def main(start_page: int=1, end_page: int=None) -> None:
         df.drop_duplicates(inplace=True)
         df.rename(columns=rename_map, inplace=True)
         df['Download_timestamp'] = datetime.now()
-        df.to_sql(name='Apartments', con=engine, schema='dbo', if_exists='append', index=False)
+        df.to_sql(name='Apartments', con=ENGINE, schema='dbo', if_exists='append', index=False)
 
     new_apartments = len(df.index)
     print(f'New Apartments: {new_apartments}')
