@@ -23,7 +23,7 @@ def predict(model, data_to_predict: pd.DataFrame) -> pd.DataFrame:
 
 
 def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
-    # Get model infoq
+    # Get model info
     sql_expression = f"""SELECT Model_path,
                                 Model_features 
                          FROM Models 
@@ -37,7 +37,7 @@ def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
     model_columns = model_info[1].split('; ')
     difference_between_columns = set(model_columns).difference(set(data_to_predict.columns))
 
-    if difference_between_columns != set():
+    if difference_between_columns:
         raise ValueError(f'Columns {difference_between_columns} not found in put data')
 
     # Load model
