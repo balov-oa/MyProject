@@ -11,3 +11,4 @@ downloader.bat
 /run jupyter.bat
 /Untitled.ipynb
 __pycache__/
+/.ipynb_checkpoints/
