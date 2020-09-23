@@ -1,10 +1,11 @@
+import logging
 import pickle
 from pathlib import Path
 
 import pandas as pd
 
-from src.processor import handle_dataframe, filter_df_main, filter_df_room_1, convert_to_dummies
-from src.sql_connector import get_sqlalchemy_engine
+from processor import handle_dataframe, filter_df_main, filter_df_room_1, convert_to_dummies
+from sql_connector import get_sqlalchemy_engine
 
 engine = get_sqlalchemy_engine()
 
@@ -79,7 +80,26 @@ def main():
     data = filter_df_room_1(data)
     data = data.drop(['Date_Add', 'Date_Expiration', 'Address', 'Price', 'Not_Used', 'Not_Used_Description'], axis=1)
     data_dummies = convert_to_dummies(data)
-    print(f'Input data shape: {data.shape}')
-    predictions = predict_main(data_dummies)
-    predictions.to_sql('Predictions', engine, if_exists='append', index=False)
-    return data_dummies, data, predictions
+    input_data_message = f'Input data shape: {data.shape}'
+    print(input_data_message)
+    logging.info(input_data_message)
+    if not data.empty:
+        predictions = predict_main(data_dummies)
+        predictions.to_sql('Predictions', engine, if_exists='append', index=False)
+    else:
+        logging.info('There are have not new apartments to predictions')
+
+
+if __name__ == '__main__':
+    log_file = Path(__file__).parent.parent.joinpath('logs').joinpath('predictor.txt')
+    logging.basicConfig(
+        format='[%(asctime)s] -- %(levelname).3s -- %(message)s',
+        datefmt='%Y.%m.%d %H:%M:%S',
+        level=logging.DEBUG,
+        filename=log_file)
+
+    logging.info('Predictor start')
+    try:
+        main()
+    except Exception as e:
+        logging.exception(e)

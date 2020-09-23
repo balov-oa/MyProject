@@ -45,8 +45,8 @@ def handle_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 def filter_df_main(df: pd.DataFrame) -> pd.DataFrame:
     df.drop(['Square_Kitchen', 'Square_Living', 'Apartment_Type'], axis=1, inplace=True)
-    fillna_list = ['Material', 'Apartment_Condition', 'Bathroom_Type', 'Balcony_Loggia']
-    df.loc[:, fillna_list] = df.loc[:, fillna_list].fillna('Нет значения')
+    fill_na_list = ['Material', 'Apartment_Condition', 'Bathroom_Type', 'Balcony_Loggia']
+    df.loc[:, fill_na_list] = df.loc[:, fill_na_list].fillna('Нет значения')
     df = df[df['Rooms_Number'] <= 4]
     df = df[[i in ['кирпич', 'панель', 'монолит', 'Нет значения'] for i in df['Material']]]
     df = df[df['Year_Building'] >= 1960]

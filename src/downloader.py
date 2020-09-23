@@ -144,15 +144,15 @@ def main(start_page: int = 1, end_page: int = None) -> None:
 
 
 if __name__ == '__main__':
-    log_file = Path(__file__).parent.parent.joinpath('logs').joinpath('log.txt')
+    log_file = Path(__file__).parent.parent.joinpath('logs').joinpath('downloader.txt')
     logging.basicConfig(
-        format="[%(asctime)s] -- %(levelname).3s -- %(message)s",
+        format='[%(asctime)s] -- %(levelname).3s -- %(message)s',
         datefmt='%Y.%m.%d %H:%M:%S',
         level=logging.DEBUG,
         filename=log_file)
 
-    logging.info("Download start")
+    logging.info('Download start')
     try:
-        main()
+        main(1, 1)
     except Exception as E:
         logging.exception(E)

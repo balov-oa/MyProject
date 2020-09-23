@@ -3,7 +3,7 @@
 .idea/workspace.xml
 *.iml
 *.xml
-logs/log.txt
+logs/downloader.txt
 downloader.bat
 
 /logs/
