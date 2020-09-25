@@ -3,14 +3,22 @@ import time
 from datetime import datetime
 from pathlib import Path
 from random import randint
-from typing import List, Set
+from typing import (
+    Any,
+    Dict,
+    List,
+    Set,
+)
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from sql_connector import get_sqlalchemy_engine, get_distinct_urls_from_database
+from sql_connector import (
+    get_distinct_urls_from_database,
+    get_sqlalchemy_engine,
+)
 
 SESSION = requests.Session()
 
@@ -38,7 +46,7 @@ def find_district_field(keys: List[str]) -> int:
             return i
 
 
-def parse_apartment(url: str) -> dict:
+def parse_apartment(url: str) -> Dict[str, Any]:
     soup = get_soup_by_url(url)
 
     keys = [i.find('span').text.replace('\xa0', '').lower() for i in
@@ -153,6 +161,6 @@ if __name__ == '__main__':
 
     logging.info('Download start')
     try:
-        main(1, 1)
+        main()
     except Exception as E:
         logging.exception(E)

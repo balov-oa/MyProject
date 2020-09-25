@@ -4,7 +4,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from processor import handle_dataframe, filter_df_main, filter_df_room_1, convert_to_dummies
+from processor import (
+    convert_to_dummies,
+    filter_df_main,
+    filter_df_room_1,
+    handle_dataframe,
+)
 from sql_connector import get_sqlalchemy_engine
 
 engine = get_sqlalchemy_engine()
@@ -17,10 +22,7 @@ def get_model_from_path(path: Path):
 
 
 def predict(model, data_to_predict: pd.DataFrame) -> pd.DataFrame:
-    raw_predict = model.predict(data_to_predict).round(2)
-    predictions = pd.DataFrame({'Apartment_Key': data_to_predict.index,
-                                'Predict': raw_predict})
-    return predictions
+    return model.predict(data_to_predict).round(2)
 
 
 def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
@@ -50,7 +52,7 @@ def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
     return predictions
 
 
-def main():
+def main() -> None:
     query = """SELECT District,
                       Address,
                       Sales_Type,
@@ -78,14 +80,19 @@ def main():
     data = handle_dataframe(data)
     data = filter_df_main(data)
     data = filter_df_room_1(data)
-    data = data.drop(['Date_Add', 'Date_Expiration', 'Address', 'Price', 'Not_Used', 'Not_Used_Description'], axis=1)
-    data_dummies = convert_to_dummies(data)
-    input_data_message = f'Input data shape: {data.shape}'
+    data_to_predict = data.drop(
+        ['Date_Add', 'Date_Expiration', 'Address', 'Price', 'Not_Used', 'Not_Used_Description'],
+        axis=1
+    )
+    data_dummies = convert_to_dummies(data_to_predict)
+    input_data_message = f'Input data shape: {data_to_predict.shape}'
     print(input_data_message)
     logging.info(input_data_message)
     if not data.empty:
-        predictions = predict_main(data_dummies)
-        predictions.to_sql('Predictions', engine, if_exists='append', index=False)
+        data['Predict'] = predict_main(data_dummies)
+        data['Error'] = (data['Price'] - data['Predict']).round(2)
+        data.reset_index(inplace=True)
+        data[['Apartment_Key', 'Predict', 'Error']].to_sql('Predictions', engine, if_exists='append', index=False)
     else:
         logging.info('There are have not new apartments to predictions')
 

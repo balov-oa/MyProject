@@ -1,6 +1,5 @@
 
-.idea/vcs.xml
-.idea/workspace.xml
+.idea/
 *.iml
 *.xml
 logs/downloader.txt
@@ -11,4 +10,5 @@ downloader.bat
 /run jupyter.bat
 /Untitled.ipynb
 __pycache__/
-/.ipynb_checkpoints/
+.ipynb_checkpoints/
+/models/
