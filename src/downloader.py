@@ -16,7 +16,6 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 from sql_connector import (
-    get_distinct_urls_from_database,
     get_sqlalchemy_engine,
 )
 
@@ -114,7 +113,7 @@ def main(start_page: int = 1, end_page: int = None) -> None:
 
     df = pd.DataFrame(columns=list(rename_map.keys()))
 
-    urls_in_database = get_distinct_urls_from_database()
+    urls_in_database = pd.read_sql('SELECT DISTINCT Url_Link FROM Apartment_Tomsk.dbo.Apartments', ENGINE)
     urls_in_database = set(urls_in_database['Url_Link'])
 
     len_storage = len(urls_in_database)

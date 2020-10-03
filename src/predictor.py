@@ -12,7 +12,7 @@ from processor import (
 )
 from sql_connector import get_sqlalchemy_engine
 
-engine = get_sqlalchemy_engine()
+ENGINE = get_sqlalchemy_engine()
 
 
 def get_model_from_path(path: Path):
@@ -31,7 +31,7 @@ def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
                                 Model_features 
                          FROM Models 
                          WHERE Is_main = 1"""
-    model_info = engine.execute(sql_expression).fetchone()
+    model_info = ENGINE.execute(sql_expression).fetchone()
 
     #     if model_info is None:
     #         raise ValueError(f"Model '{model_name}' does not exist")
@@ -76,7 +76,7 @@ def main() -> None:
                FROM Apartment_Tomsk.dbo.Apartments
                WHERE Apartment_Key NOT IN (SELECT Apartment_Key FROM Apartment_Tomsk.dbo.Predictions)
                AND Rooms_Number = 1"""
-    data = pd.read_sql_query(query, engine, index_col='Apartment_Key')
+    data = pd.read_sql_query(query, ENGINE, index_col='Apartment_Key')
     data = handle_dataframe(data)
     data = filter_df_main(data)
     data = filter_df_room_1(data)
@@ -92,7 +92,7 @@ def main() -> None:
         data['Predict'] = predict_main(data_dummies)
         data['Error'] = (data['Price'] - data['Predict']).round(2)
         data.reset_index(inplace=True)
-        data[['Apartment_Key', 'Predict', 'Error']].to_sql('Predictions', engine, if_exists='append', index=False)
+        data[['Apartment_Key', 'Predict', 'Error']].to_sql('Predictions', ENGINE, if_exists='append', index=False)
     else:
         logging.info('There are have not new apartments to predictions')
 

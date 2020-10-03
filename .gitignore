@@ -1,6 +1,7 @@
 
 .idea/
 *.iml
+*.xlsx
 *.xml
 logs/downloader.txt
 downloader.bat

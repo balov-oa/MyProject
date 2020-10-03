@@ -1,6 +1,6 @@
 from functools import lru_cache
 from urllib import parse
-import pandas as pd
+
 from sqlalchemy import create_engine
 
 
@@ -13,7 +13,3 @@ def get_sqlalchemy_engine():
 
     engine = create_engine(f"mssql+pyodbc:///?odbc_connect={params}")
     return engine
-
-
-def get_distinct_urls_from_database():
-    return pd.read_sql('SELECT DISTINCT Url_Link FROM Apartment_Tomsk.dbo.Apartments', get_sqlalchemy_engine())
