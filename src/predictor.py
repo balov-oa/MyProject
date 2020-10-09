@@ -48,7 +48,6 @@ def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
 
     # Make predict
     predictions = predict(model=model, data_to_predict=data_to_predict[model_columns])
-
     return predictions
 
 
@@ -94,7 +93,7 @@ def main() -> None:
         data.reset_index(inplace=True)
         data[['Apartment_Key', 'Predict', 'Error']].to_sql('Predictions', ENGINE, if_exists='append', index=False)
     else:
-        logging.info('There are have not new apartments to predictions')
+        logging.info('There are no new apartments to predictions')
 
 
 if __name__ == '__main__':

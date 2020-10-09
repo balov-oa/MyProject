@@ -39,20 +39,18 @@ def handle_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     # Drop useless columns
     df.drop(['Floor_Numbers_Of_Floors', 'Id', 'Sales_Type'], axis=1, inplace=True)
-
     return df
 
 
 def filter_df_main(df: pd.DataFrame) -> pd.DataFrame:
     df.drop(['Square_Kitchen', 'Square_Living', 'Apartment_Type'], axis=1, inplace=True)
-    fill_na_list = ['Material', 'Apartment_Condition', 'Bathroom_Type', 'Balcony_Loggia']
-    df.loc[:, fill_na_list] = df.loc[:, fill_na_list].fillna('Нет значения')
+    columns_to_fill_na = ['Material', 'Apartment_Condition', 'Bathroom_Type', 'Balcony_Loggia']
+    df.loc[:, columns_to_fill_na].fillna('Нет значения', inplace=True)
     df = df[df['Rooms_Number'] <= 4]
     df = df[[i in ['кирпич', 'панель', 'монолит', 'Нет значения'] for i in df['Material']]]
     df = df[df['Year_Building'] >= 1960]
     df = df[df['Floors_In_Building'] != 1]
     df = df[df['Floor'] != 0]
-
     return df
 
 
@@ -101,7 +99,6 @@ def filter_df_room_1(df: pd.DataFrame) -> pd.DataFrame:
                                 'балкон и лоджия']
     idx_to_delete = [i in balcony_loggia_to_delete for i in df['Balcony_Loggia']]
     df.loc[idx_to_delete, 'Not_Used'] = 1
-
     return clean(df)
 
 
@@ -132,5 +129,4 @@ def convert_to_dummies(df: pd.DataFrame) -> pd.DataFrame:
     df['Balcony_Loggia_Loggia_Glazing'] = df['Balcony_Loggia'] == 'лоджия, остекление'
     df['Balcony_Loggia_Not_Info'] = df['Balcony_Loggia'] == 'Нет значения'
     df.drop(['District', 'Material', 'Apartment_Condition', 'Bathroom_Type', 'Balcony_Loggia'], axis=1, inplace=True)
-
     return df
