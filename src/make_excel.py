@@ -63,7 +63,6 @@ def get_data_for_make_excel() -> pd.DataFrame:
     data_out.sort_values(['Дата добавления', 'Ошибка'], ascending=[False, True], inplace=True)
     data_out['Дата добавления'] = data_out['Дата добавления'].astype(str)
     data_out['Дата истечения'] = data_out['Дата истечения'].astype(str)
-
     return data_out
 
 
@@ -73,7 +72,7 @@ def make_excel(data_out: pd.DataFrame) -> None:
     wb.add_named_style(base_style)
     wb.add_named_style(text_wrap_style)
     ws = wb.active
-    ws.auto_filter.ref = "A1:M1"
+    ws.auto_filter.ref = 'A1:M1'
 
     # Add data
     for r in dataframe_to_rows(data_out, index=False, header=True):
@@ -137,7 +136,6 @@ if __name__ == '__main__':
 
     logging.info('Make excel')
     try:
-        data_out = get_data_for_make_excel()
-        make_excel(data_out)
+        make_excel(get_data_for_make_excel())
     except Exception as e:
         logging.exception(e)
