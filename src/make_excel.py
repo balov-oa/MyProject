@@ -123,7 +123,7 @@ def make_excel(data_out: pd.DataFrame) -> None:
                                                      end_color='FFD6A5')
                                       )
 
-    wb.save(BASE_PATH.joinpath('report.xlsx'))
+    wb.save(BASE_PATH.parent.joinpath('OneDrive').joinpath('report.xlsx'))
 
 
 if __name__ == '__main__':
