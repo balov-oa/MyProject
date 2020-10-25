@@ -153,6 +153,6 @@ if __name__ == '__main__':
 
     logging.info('Download start')
     try:
-        main()
+        main(10)
     except Exception as E:
         logging.exception(E)

@@ -13,3 +13,4 @@ downloader.bat
 __pycache__/
 .ipynb_checkpoints/
 /models/
+/qwerty.py
