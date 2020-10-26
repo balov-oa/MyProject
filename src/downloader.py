@@ -15,9 +15,7 @@ import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from sql_connector import (
-    get_sqlalchemy_engine,
-)
+from sql_connector import get_sqlalchemy_engine
 
 SESSION = requests.Session()
 
@@ -153,6 +151,6 @@ if __name__ == '__main__':
 
     logging.info('Download start')
     try:
-        main(10)
+        main(end_page=40)
     except Exception as E:
         logging.exception(E)

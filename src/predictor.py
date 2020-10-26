@@ -21,10 +21,6 @@ def get_model_from_path(path: Path):
     return model
 
 
-def predict(model, data_to_predict: pd.DataFrame) -> pd.DataFrame:
-    return model.predict(data_to_predict).round(2)
-
-
 def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
     # Get model info
     sql_expression = f"""SELECT Model_path,
@@ -47,7 +43,7 @@ def predict_main(data_to_predict: pd.DataFrame) -> pd.DataFrame:
     model = get_model_from_path(model_path)
 
     # Make predict
-    predictions = predict(model=model, data_to_predict=data_to_predict[model_columns])
+    predictions = model.predict(data_to_predict[model_columns]).round(2)
     return predictions
 
 
